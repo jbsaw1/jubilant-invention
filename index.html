@@ -1,84 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head><style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #0e0e0e;
-    color: #e0e0e0;
-    padding: 20px;
-  }
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0e0e0e;
+        color: #e0e0e0;
+        padding: 20px;
+      }
 
-  h2 {
-    color: #f1c40f;
-  }
+      h2 {
+        color: #f1c40f;
+      }
 
-  #skill-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
-  }
+      /* ⭐ FIXED: Apply grid styling to #stats instead of #skill-grid */
+      #stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
 
-  .skill-card {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-    transition: transform 0.15s ease;
-  }
+      .skill-card {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        transition: transform 0.15s ease;
+      }
 
-  .skill-card:hover {
-    transform: scale(1.05);
-    border-color: #f1c40f;
-  }
+      .skill-card:hover {
+        transform: scale(1.05);
+        border-color: #f1c40f;
+      }
 
-  .skill-card img {
-    width: 32px;
-    height: 32px;
-    margin-bottom: 6px;
-  }
+      .skill-card img {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 6px;
+      }
 
-  .skill-name {
-    font-weight: bold;
-    color: #f1c40f;
-  }
+      .skill-name {
+        font-weight: bold;
+        color: #f1c40f;
+      }
 
-  .skill-level {
-    font-size: 14px;
-    margin-top: 4px;
-  }
-</style>
-</head>
+      .skill-level {
+        font-size: 14px;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+
   <body>
 
-
     <h1>Jack's Place</h1>
-    
-    <p>Welcome to the stats page: </p>
-    
+    <p>Welcome to the stats page:</p>
 
-  
-  <h2>To Do:</h2>
-  <ul>
-  <li><a href="https:trueachievements.com">TrueAchievements API</a></li>
-  <li>OSRS API </li>
-  <li>Link to thesis?</li>
-  </ul>
-  
+    <h2>To Do:</h2>
+    <ul>
+      <li><a href="https:trueachievements.com">TrueAchievements API</a></li>
+      <li>OSRS API</li>
+      <li>Link to thesis?</li>
+    </ul>
 
+    <h2>OSRS Stats Viewer</h2>
 
-<h2>OSRS Stats Viewer</h2>
+    <input id="user" value="bnc23" placeholder="Enter username">
+    <button onclick="loadStats()">Load Stats</button>
 
-<input id="user" value ="bnc23" placeholder="Enter username">
-<button onclick="loadStats()">Load Stats</button>
-<div id="stats"></div>
+    <!-- ⭐ This is the grid container your JS writes into -->
+    <div id="stats"></div>
 
-<script src="OSRSgrab.js"></script>
-
-
-
-    
+    <script src="OSRSgrab.js"></script>
 
   </body>
 </html>
