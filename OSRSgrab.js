@@ -32,19 +32,11 @@ async function loadStats() {
     const card = document.createElement("div");
     card.className = "skill-card";
 
-
-     const icon =
-  skill === "Overall"
-    ? "https://oldschool.runescape.wiki/images/Stats_icon.png"
-    : `https://static.runelite.net/media/skill/${skill.toLowerCase()}.png`;
-
-card.innerHTML = `
-  <img src="${icon}">
-  <div class="skill-name">${skill}</div>
-  <div class="skill-level">Lvl ${level}</div>
-  <div class="skill-level">${xp.toLocaleString()} XP</div>
-`;
-
+    card.innerHTML = `
+      <img src="https://oldschool.runescape.wiki/images/${skill}_icon.png">
+      <div class="skill-name">${skill}</div>
+      <div class="skill-level">Lvl ${level}</div>
+      <div class="skill-level">${xp.toLocaleString()} XP</div>
     `;
 
     grid.appendChild(card);
