@@ -1,15 +1,14 @@
 export async function onRequest({ env }) {
   const {
     XBOX_REFRESH_TOKEN,
-    XBOX_CLIENT_ID,
-    XBOX_TENANT_ID
+    XBOX_CLIENT_ID
   } = env;
 
   //
-  // 1) Refresh Microsoft access token
+  // 1) Refresh Microsoft Account (MSA) access token
   //
   const tokenRes = await fetch(
-    `https://login.microsoftonline.com/${XBOX_TENANT_ID}/oauth2/v2.0/token`,
+    "https://login.live.com/oauth20_token.srf",
     {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -17,12 +16,20 @@ export async function onRequest({ env }) {
         client_id: XBOX_CLIENT_ID,
         grant_type: "refresh_token",
         refresh_token: XBOX_REFRESH_TOKEN,
-        scope: "XboxLive.signin XboxLive.offline_access"
+        redirect_uri: "https://localhost"
       })
     }
   );
 
   const tokenJson = await tokenRes.json();
+
+  if (!tokenJson.access_token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to refresh access token", details: tokenJson }),
+      { status: 500 }
+    );
+  }
+
   const accessToken = tokenJson.access_token;
 
   //
@@ -46,6 +53,14 @@ export async function onRequest({ env }) {
   });
 
   const xblJson = await xblRes.json();
+
+  if (!xblJson.Token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to get XBL token", details: xblJson }),
+      { status: 500 }
+    );
+  }
+
   const xblToken = xblJson.Token;
   const uhs = xblJson.DisplayClaims.xui[0].uhs;
 
@@ -69,12 +84,19 @@ export async function onRequest({ env }) {
   });
 
   const xstsJson = await xstsRes.json();
-  const xstsToken = xstsJson.Token;
 
+  if (!xstsJson.Token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to get XSTS token", details: xstsJson }),
+      { status: 500 }
+    );
+  }
+
+  const xstsToken = xstsJson.Token;
   const authHeader = `XBL3.0 x=${uhs};${xstsToken}`;
 
   //
-  // 4) Fetch your Xbox profile
+  // 4) Fetch Xbox profile
   //
   const profileRes = await fetch(
     "https://profile.xboxlive.com/users/me/profile/settings?settings=Gamertag,Gamerscore,GameDisplayPicRaw,AccountTier,TenureLevel",
@@ -89,7 +111,7 @@ export async function onRequest({ env }) {
   const profileJson = await profileRes.json();
 
   //
-  // 5) Return JSON to your frontend
+  // 5) Return JSON to frontend
   //
   return new Response(JSON.stringify(profileJson), {
     status: 200,
