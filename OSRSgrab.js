@@ -29,9 +29,10 @@ async function loadStats() {
 
     if (xp === undefined || level === undefined) continue;
 
+    // ⭐ OSRS Wiki icon logic
     const icon = skill === "Overall"
       ? "https://oldschool.runescape.wiki/images/Stats_icon.png"
-      : `https://static.runelite.net/media/skill/${skill.toLowerCase()}.png`;
+      : `https://oldschool.runescape.wiki/images/${skill}_icon.png`;
 
     const card = document.createElement("div");
     card.className = "skill-card";
@@ -46,3 +47,4 @@ async function loadStats() {
     grid.appendChild(card);
   }
 }
+
