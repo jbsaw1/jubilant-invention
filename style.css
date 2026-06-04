@@ -112,31 +112,24 @@ h2 {
   flex: 1;
   min-width: 300px;   /* prevents squishing on small screens */
 }
-#dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    "osrs-card xbox-card"
-    "empty achievements";
+#dashboard-columns {
+  display: flex;
   gap: 20px;
-  align-items: start;
+  align-items: flex-start; /* prevents column coupling */
 }
 
-/* Assign grid areas */
-#osrs-card {
-  grid-area: osrs-card;
+#left-column,
+#right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-#xbox-card {
-  grid-area: xbox-card;
+/* Optional: prevent columns from shrinking too small */
+#left-column, #right-column {
+  min-width: 300px;
 }
 
-#achievements-block {
-  grid-area: achievements;
-}
-
-#empty-right {
-  grid-area: empty;
-}
 
 }
