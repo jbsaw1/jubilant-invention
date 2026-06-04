@@ -1,0 +1,102 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0e0e0e;
+  color: #e0e0e0;
+  padding: 20px;
+}
+
+h2 {
+  color: #f1c40f;
+}
+
+/* OSRS grid */
+#stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.skill-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.skill-card:hover {
+  transform: scale(1.05);
+  border-color: #f1c40f;
+}
+
+.skill-card img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+}
+
+.skill-name {
+  font-weight: bold;
+  color: #f1c40f;
+}
+
+.skill-level {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Xbox profile card */
+.xbox-card {
+  background: #1a1a1a;
+  border: 2px solid #107c10;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin-top: 20px;
+}
+
+.xbox-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gamerpic {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+}
+
+/* Xbox achievements grid */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.achievement-card {
+  background: #1a1a1a;
+  border-left: 4px solid #107c10;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.achievement-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.achievement-card h4 {
+  margin: 0;
+  color: #fff;
+}
+
+.achievement-card p {
+  margin: 4px 0;
+  color: #ccc;
+  font-size: 14px;
+}
