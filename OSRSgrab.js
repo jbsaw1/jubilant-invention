@@ -1,6 +1,6 @@
 async function loadStats() {
   const user = document.getElementById("user").value;
-  const grid = document.getElementById("skill-grid");
+  const grid = document.getElementById("stats");
   grid.innerHTML = "<div>Loading...</div>";
 
   const url = `/api?user=${encodeURIComponent(user)}`;
