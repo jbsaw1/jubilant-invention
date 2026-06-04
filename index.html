@@ -2,51 +2,53 @@
 <html>
   <head><style>
   body {
+    font-family: Arial, sans-serif;
     background: #0e0e0e;
     color: #e0e0e0;
-    font-family: Arial, sans-serif;
+    padding: 20px;
   }
 
-  #stats-panel {
-    width: 360px;
-    margin: 20px auto;
-    padding: 12px;
-    background: #1a1a1a;
-    border: 3px solid #5a381e;
-    border-radius: 6px;
+  h2 {
+    color: #f1c40f;
   }
 
-  #skill-columns {
+  #skill-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
   }
 
   .skill-card {
-    background: #111;
+    background: #1a1a1a;
     border: 1px solid #333;
-    padding: 6px;
+    padding: 10px;
+    border-radius: 6px;
     text-align: center;
-    border-radius: 4px;
+    transition: transform 0.15s ease;
+  }
+
+  .skill-card:hover {
+    transform: scale(1.05);
+    border-color: #f1c40f;
   }
 
   .skill-card img {
-    width: 28px;
-    height: 28px;
-    display: block;
-    margin: 0 auto 4px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 6px;
   }
 
   .skill-name {
-    font-size: 12px;
+    font-weight: bold;
     color: #f1c40f;
   }
 
   .skill-level {
-    font-size: 11px;
+    font-size: 14px;
+    margin-top: 4px;
   }
 </style>
-
 </head>
   <body>
 
