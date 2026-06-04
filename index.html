@@ -1,5 +1,55 @@
 <!DOCTYPE html>
 <html>
+  <head><style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0e0e0e;
+    color: #e0e0e0;
+    padding: 20px;
+  }
+
+  h2 {
+    color: #f1c40f;
+  }
+
+  #skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .skill-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    transition: transform 0.15s ease;
+  }
+
+  .skill-card:hover {
+    transform: scale(1.05);
+    border-color: #f1c40f;
+  }
+
+  .skill-card img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 6px;
+  }
+
+  .skill-name {
+    font-weight: bold;
+    color: #f1c40f;
+  }
+
+  .skill-level {
+    font-size: 14px;
+    margin-top: 4px;
+  }
+</style>
+</head>
   <body>
 
 
