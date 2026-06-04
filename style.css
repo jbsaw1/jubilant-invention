@@ -112,3 +112,25 @@ h2 {
   flex: 1;
   min-width: 300px;   /* prevents squishing on small screens */
 }
+#dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "osrs-card achievements"
+    "xbox-card achievements";
+  gap: 20px;
+  align-items: start;
+}
+
+/* Assign grid areas */
+#osrs-card {
+  grid-area: osrs-card;
+}
+
+#xbox-card {
+  grid-area: xbox-card;
+}
+
+#achievements-block {
+  grid-area: achievements;
+}
