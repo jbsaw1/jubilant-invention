@@ -1,6 +1,6 @@
 export async function onRequest({ env }) {
   try {
-    // 1. Refresh token → access token
+    // 1. Refresh token → access token (NO CLIENT SECRET)
     const tokenRes = await fetch("https://login.live.com/oauth20_token.srf", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -8,7 +8,6 @@ export async function onRequest({ env }) {
         grant_type: "refresh_token",
         refresh_token: env.XBOX_REFRESH_TOKEN,
         client_id: env.XBOX_CLIENT_ID,
-        client_secret: env.XBOX_CLIENT_SECRET,
         scope: "XboxLive.signin XboxLive.offline_access"
       })
     });
@@ -36,12 +35,12 @@ export async function onRequest({ env }) {
     });
 
     const xblJson = await xblRes.json();
-    if (!xblJson.DisplayClaims?.xui?.[0]?.xuid) {
+    const xuid = xblJson.DisplayClaims?.xui?.[0]?.xuid;
+    const uhs = xblJson.DisplayClaims?.xui?.[0]?.uhs;
+
+    if (!xuid) {
       throw new Error("XBL auth failed: " + JSON.stringify(xblJson));
     }
-
-    const uhs = xblJson.DisplayClaims.xui[0].uhs;
-    const xuid = xblJson.DisplayClaims.xui[0].xuid;
 
     // 3. XSTS auth
     const xstsRes = await fetch("https://xsts.auth.xboxlive.com/xsts/authorize", {
@@ -64,7 +63,7 @@ export async function onRequest({ env }) {
 
     const authHeader = `XBL3.0 x=${uhs};${xstsJson.Token}`;
 
-    // 4. Achievements fetch
+    // 4. Achievements
     const achRes = await fetch(
       `https://achievements.xboxlive.com/users/xuid(${xuid})/achievements?maxItems=100`,
       {
