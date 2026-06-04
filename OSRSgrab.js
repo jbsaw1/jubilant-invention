@@ -1,22 +1,13 @@
-
 async function loadStats() {
   const user = document.getElementById("user").value;
-  const output = document.getElementById("output");
-  output.innerHTML = "Loading...";
+  const grid = document.getElementById("skill-grid");
+  grid.innerHTML = "<div>Loading...</div>";
 
   const url = `/api?user=${encodeURIComponent(user)}`;
-
-  let res;
-
-  try {
-    res = await fetch(url);
-  } catch (e) {
-    output.innerHTML = "Network error — proxy unreachable.";
-    return;
-  }
+  const res = await fetch(url);
 
   if (!res.ok) {
-    output.innerHTML = "Player not found or API error.";
+    grid.innerHTML = "<div>Player not found.</div>";
     return;
   }
 
@@ -30,17 +21,24 @@ async function loadStats() {
     "Slayer","Farming","Runecraft","Hunter","Construction","Sailing"
   ];
 
-  let html = "";
+  grid.innerHTML = "";
 
   for (const skill of skills) {
     const xp = d[skill];
     const level = d[`${skill}_level`];
 
-    if (xp !== undefined && level !== undefined) {
-      html += `<div class="skill"><strong>${skill}</strong>: Level ${level} (XP: ${xp})</div>`;
-    }
+    if (xp === undefined || level === undefined) continue;
+
+    const card = document.createElement("div");
+    card.className = "skill-card";
+
+    card.innerHTML = `
+      <img src="https://www.osrsbox.com/osrsbox-db/skills-icons/${skill.toLowerCase()}.png">
+      <div class="skill-name">${skill}</div>
+      <div class="skill-level">Lvl ${level}</div>
+      <div class="skill-level">${xp.toLocaleString()} XP</div>
+    `;
+
+    grid.appendChild(card);
   }
-
-  output.innerHTML = html || "No skill data found.";
 }
-
