@@ -14,31 +14,42 @@ async function loadXboxProfile() {
 }
 
 async function loadXboxAchievements() {
-  const res = await fetch("/xbox-achievements");
-  const data = await res.json();
-
   const container = document.getElementById("xbox-achievements");
   container.innerHTML = "";
 
-  data.achievements
-    .filter(a => a.progressState === "Achieved")
-    .sort((a, b) => new Date(b.progression.timeUnlocked) - new Date(a.progression.timeUnlocked))
-    .slice(0, 12)
-    .forEach(a => {
-      const art = a.mediaAssets?.find(m => m.type === "Art")?.url;
+  try {
+    const res = await fetch("/xbox-achievements");
+    const data = await res.json();
 
-      const card = document.createElement("div");
-      card.className = "achievement-card";
+    // If achievements are not available, exit gracefully
+    if (!data.achievements || !Array.isArray(data.achievements)) {
+      console.warn("Achievements unavailable:", data);
+      return; // stop here, no UI crash
+    }
 
-      card.innerHTML = `
-        ${art ? `<img src="${art}">` : ""}
-        <h4>${a.name}</h4>
-        <p>${a.description}</p>
-        <p><small>${new Date(a.progression.timeUnlocked).toLocaleString()}</small></p>
-      `;
+    data.achievements
+      .filter(a => a.progressState === "Achieved")
+      .sort((a, b) => new Date(b.progression.timeUnlocked) - new Date(a.progression.timeUnlocked))
+      .slice(0, 12)
+      .forEach(a => {
+        const art = a.mediaAssets?.find(m => m.type === "Art")?.url;
 
-      container.appendChild(card);
-    });
+        const card = document.createElement("div");
+        card.className = "achievement-card";
+
+        card.innerHTML = `
+          ${art ? `<img src="${art}">` : ""}
+          <h4>${a.name}</h4>
+          <p>${a.description}</p>
+          <p><small>${new Date(a.progression.timeUnlocked).toLocaleString()}</small></p>
+        `;
+
+        container.appendChild(card);
+      });
+
+  } catch (err) {
+    console.error("Failed to load achievements:", err);
+  }
 }
 
 // Auto-load on page load
