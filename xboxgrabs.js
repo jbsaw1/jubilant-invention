@@ -1,4 +1,3 @@
-<script>
 async function loadXboxProfile() {
   const res = await fetch("/xbox-profile");
   const data = await res.json();
@@ -47,4 +46,3 @@ window.addEventListener("DOMContentLoaded", () => {
   loadXboxProfile();
   loadXboxAchievements();
 });
-</script>
