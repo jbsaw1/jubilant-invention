@@ -100,18 +100,8 @@ h2 {
   color: #ccc;
   font-size: 14px;
 }
-#profile-and-osrs {
-  display: flex;
-  gap: 20px;          /* space between the two blocks */
-  align-items: flex-start;
-  justify-content: center; /* optional: centers them horizontally */
-  flex-wrap: wrap;    /* optional: allows stacking on mobile */
-}
 
-#xbox-card, #osrs-card {
-  flex: 1;
-  min-width: 300px;   /* prevents squishing on small screens */
-}
+/* ⭐ NEW LAYOUT: Two independent columns */
 #dashboard-columns {
   display: flex;
   gap: 20px;
@@ -126,10 +116,6 @@ h2 {
   gap: 20px;
 }
 
-/* Optional: prevent columns from shrinking too small */
 #left-column, #right-column {
   min-width: 300px;
-}
-
-
 }
