@@ -96,16 +96,14 @@ export async function onRequest({ env }) {
     }
   );
 
-  const achJson = await achRes.json();
+const achJson = await achRes.json();
+achJson._workerVersion = "v7-achievements";
 
-  //
-  // 5) Return JSON to your frontend
-  //
-  return new Response(JSON.stringify(achJson), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
-    }
-  });
-}
+return new Response(JSON.stringify(achJson), {
+  status: 200,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  }
+});
+
