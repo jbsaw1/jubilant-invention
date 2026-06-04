@@ -22,12 +22,8 @@ export async function onRequest({ env }) {
   );
 
   const tokenJson = await tokenRes.json();
-
   if (!tokenJson.access_token) {
-    return new Response(
-      JSON.stringify({ error: "Failed to refresh access token", details: tokenJson }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Failed to refresh access token", details: tokenJson }), { status: 500 });
   }
 
   const accessToken = tokenJson.access_token;
@@ -53,12 +49,8 @@ export async function onRequest({ env }) {
   });
 
   const xblJson = await xblRes.json();
-
   if (!xblJson.Token) {
-    return new Response(
-      JSON.stringify({ error: "Failed to get XBL token", details: xblJson }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Failed to get XBL token", details: xblJson }), { status: 500 });
   }
 
   const xblToken = xblJson.Token;
@@ -84,19 +76,15 @@ export async function onRequest({ env }) {
   });
 
   const xstsJson = await xstsRes.json();
-
   if (!xstsJson.Token) {
-    return new Response(
-      JSON.stringify({ error: "Failed to get XSTS token", details: xstsJson }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Failed to get XSTS token", details: xstsJson }), { status: 500 });
   }
 
   const xstsToken = xstsJson.Token;
   const authHeader = `XBL3.0 x=${uhs};${xstsToken}`;
 
   //
-  // 4) Fetch achievements
+  // 4) Fetch achievements (correct endpoint)
   //
   const achRes = await fetch(
     "https://achievements.xboxlive.com/users/me/achievements?maxItems=200",
