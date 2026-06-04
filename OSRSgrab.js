@@ -4,7 +4,8 @@ async function loadStats() {
   const output = document.getElementById("output");
   output.innerHTML = "Loading...";
 
-  const url = `https://osrsgrab.jacksawyer273.workers.dev/?user=${encodeURIComponent(user)}`;
+  const url = `/api?user=${encodeURIComponent(user)}`;
+
   let res;
 
   try {
