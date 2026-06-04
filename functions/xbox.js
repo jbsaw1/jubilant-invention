@@ -35,7 +35,9 @@ async function getProfile(env) {
 // ACHIEVEMENTS
 // -------------------------
 async function getAchievements(env) {
-  const res = await fetch("https://xbl.io/api/v2/achievements/player", {
+  const xuid = "2533274850830774"; // your XUID
+
+  const res = await fetch(`https://xbl.io/api/v2/achievements/player/${xuid}`, {
     headers: { "X-Authorization": env.XBL_API_KEY }
   });
 
@@ -43,6 +45,7 @@ async function getAchievements(env) {
 
   return json({ achievements: data.achievements, _source: "openxbl" });
 }
+
 
 
 // -------------------------
