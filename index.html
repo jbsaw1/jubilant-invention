@@ -8,7 +8,7 @@
   }
 
   #stats-panel {
-    width: 400px;
+    width: 360px;
     margin: 20px auto;
     padding: 12px;
     background: #1a1a1a;
@@ -21,7 +21,6 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
   }
-
 
   .skill-card {
     background: #111;
@@ -69,13 +68,9 @@
 
 <h2>OSRS Stats Viewer</h2>
 
-<div id="stats-panel">
-  <input id="user" value="bnc23" placeholder="Enter username">
-  <button onclick="loadStats()">Load Stats</button>
-
-  <div id="skill-columns"></div>
-</div>
-
+<input id="user" value="bnc23" placeholder="Enter username">
+<button onclick="loadStats()">Load Stats</button>
+<div id="skill-grid"></div>
     
 <script src="OSRSgrab.js"></script>
 
