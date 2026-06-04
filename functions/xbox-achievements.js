@@ -4,9 +4,6 @@ export async function onRequest({ env }) {
     XBOX_CLIENT_ID
   } = env;
 
-  //
-  // 1) Refresh Microsoft Account (MSA) access token
-  //
   const tokenRes = await fetch(
     "https://login.live.com/oauth20_token.srf",
     {
@@ -28,9 +25,6 @@ export async function onRequest({ env }) {
 
   const accessToken = tokenJson.access_token;
 
-  //
-  // 2) Exchange Microsoft token → Xbox Live token (XBL)
-  //
   const xblRes = await fetch("https://user.auth.xboxlive.com/user/authenticate", {
     method: "POST",
     headers: {
@@ -56,9 +50,6 @@ export async function onRequest({ env }) {
   const xblToken = xblJson.Token;
   const uhs = xblJson.DisplayClaims.xui[0].uhs;
 
-  //
-  // 3) Exchange XBL token → XSTS token
-  //
   const xstsRes = await fetch("https://xsts.auth.xboxlive.com/xsts/authorize", {
     method: "POST",
     headers: {
@@ -83,9 +74,6 @@ export async function onRequest({ env }) {
   const xstsToken = xstsJson.Token;
   const authHeader = `XBL3.0 x=${uhs};${xstsToken}`;
 
-  //
-  // 4) Fetch achievements (correct endpoint)
-  //
   const achRes = await fetch(
     "https://achievements.xboxlive.com/users/me/achievements?maxItems=200",
     {
@@ -96,14 +84,14 @@ export async function onRequest({ env }) {
     }
   );
 
-const achJson = await achRes.json();
-achJson._workerVersion = "v7-achievements";
+  const achJson = await achRes.json();
+  achJson._workerVersion = "v7-achievements";
 
-return new Response(JSON.stringify(achJson), {
-  status: 200,
-  headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*"
-  }
-});
-
+  return new Response(JSON.stringify(achJson), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
+}  // <-- THIS WAS MISSING
