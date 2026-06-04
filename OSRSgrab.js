@@ -28,15 +28,16 @@ async function loadStats() {
     const level = d[`${skill}_level`];
 
     if (xp === undefined || level === undefined) continue;
-  
+
     const icon = skill === "Overall"
-    ? "https://oldschool.runescape.wiki/images/Stats_icon.png"
-    : `https://static.runelite.net/media/skill/${skill.toLowerCase()}.png`;
+      ? "https://oldschool.runescape.wiki/images/Stats_icon.png"
+      : `https://static.runelite.net/media/skill/${skill.toLowerCase()}.png`;
+
     const card = document.createElement("div");
     card.className = "skill-card";
 
     card.innerHTML = `
-      <img src="https://oldschool.runescape.wiki/images/${skill}_icon.png">
+      <img src="${icon}">
       <div class="skill-name">${skill}</div>
       <div class="skill-level">Lvl ${level}</div>
       <div class="skill-level">${xp.toLocaleString()} XP</div>
