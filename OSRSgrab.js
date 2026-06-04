@@ -33,7 +33,7 @@ async function loadStats() {
     card.className = "skill-card";
 
     card.innerHTML = `
-      <img src="https://www.osrsbox.com/osrsbox-db/skills-icons/${skill.toLowerCase()}.png">
+      <img src="https://oldschool.runescape.wiki/images/${skill}_icon.png">
       <div class="skill-name">${skill}</div>
       <div class="skill-level">Lvl ${level}</div>
       <div class="skill-level">${xp.toLocaleString()} XP</div>
