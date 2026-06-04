@@ -1,87 +1,123 @@
 export async function onRequest({ env }) {
-  try {
-    // 1. Refresh token → access token (NO CLIENT SECRET)
-    const tokenRes = await fetch("https://login.live.com/oauth20_token.srf", {
+  const {
+    XBOX_REFRESH_TOKEN,
+    XBOX_CLIENT_ID
+  } = env;
+
+  //
+  // 1) Refresh Microsoft Account (MSA) access token
+  //
+  const tokenRes = await fetch(
+    "https://login.live.com/oauth20_token.srf",
+    {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
+        client_id: XBOX_CLIENT_ID,
         grant_type: "refresh_token",
-        refresh_token: env.XBOX_REFRESH_TOKEN,
-        client_id: env.XBOX_CLIENT_ID,
-        scope: "XboxLive.signin XboxLive.offline_access"
+        refresh_token: XBOX_REFRESH_TOKEN,
+        redirect_uri: "https://localhost"
       })
-    });
-
-    const tokenJson = await tokenRes.json();
-    if (!tokenJson.access_token) {
-      throw new Error("Failed to refresh access token: " + JSON.stringify(tokenJson));
     }
+  );
 
-    const accessToken = tokenJson.access_token;
+  const tokenJson = await tokenRes.json();
 
-    // 2. XBL auth
-    const xblRes = await fetch("https://user.auth.xboxlive.com/user/authenticate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        RelyingParty: "http://auth.xboxlive.com",
-        TokenType: "JWT",
-        Properties: {
-          AuthMethod: "RPS",
-          SiteName: "user.auth.xboxlive.com",
-          RpsTicket: `d=${accessToken}`
-        }
-      })
-    });
-
-    const xblJson = await xblRes.json();
-    const xuid = xblJson.DisplayClaims?.xui?.[0]?.xuid;
-    const uhs = xblJson.DisplayClaims?.xui?.[0]?.uhs;
-
-    if (!xuid) {
-      throw new Error("XBL auth failed: " + JSON.stringify(xblJson));
-    }
-
-    // 3. XSTS auth
-    const xstsRes = await fetch("https://xsts.auth.xboxlive.com/xsts/authorize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        RelyingParty: "http://xboxlive.com",
-        TokenType: "JWT",
-        Properties: {
-          SandboxId: "RETAIL",
-          UserTokens: [xblJson.Token]
-        }
-      })
-    });
-
-    const xstsJson = await xstsRes.json();
-    if (!xstsJson.Token) {
-      throw new Error("XSTS auth failed: " + JSON.stringify(xstsJson));
-    }
-
-    const authHeader = `XBL3.0 x=${uhs};${xstsJson.Token}`;
-
-    // 4. Achievements
-    const achRes = await fetch(
-      `https://achievements.xboxlive.com/users/xuid(${xuid})/achievements?maxItems=100`,
-      {
-        headers: {
-          "x-xbl-contract-version": "2",
-          "Authorization": authHeader
-        }
-      }
+  if (!tokenJson.access_token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to refresh access token", details: tokenJson }),
+      { status: 500 }
     );
-
-    const achJson = await achRes.json();
-    return new Response(JSON.stringify(achJson), {
-      headers: { "Content-Type": "application/json" }
-    });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.toString() }), {
-      headers: { "Content-Type": "application/json" }
-    });
   }
+
+  const accessToken = tokenJson.access_token;
+
+  //
+  // 2) Exchange Microsoft token → Xbox Live token (XBL)
+  //
+  const xblRes = await fetch("https://user.auth.xboxlive.com/user/authenticate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      RelyingParty: "http://auth.xboxlive.com",
+      TokenType: "JWT",
+      Properties: {
+        AuthMethod: "RPS",
+        SiteName: "user.auth.xboxlive.com",
+        RpsTicket: `d=${accessToken}`
+      }
+    })
+  });
+
+  const xblJson = await xblRes.json();
+
+  if (!xblJson.Token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to get XBL token", details: xblJson }),
+      { status: 500 }
+    );
+  }
+
+  const xblToken = xblJson.Token;
+  const uhs = xblJson.DisplayClaims.xui[0].uhs;
+
+  //
+  // 3) Exchange XBL token → XSTS token
+  //
+  const xstsRes = await fetch("https://xsts.auth.xboxlive.com/xsts/authorize", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      RelyingParty: "http://xboxlive.com",
+      TokenType: "JWT",
+      Properties: {
+        SandboxId: "RETAIL",
+        UserTokens: [xblToken]
+      }
+    })
+  });
+
+  const xstsJson = await xstsRes.json();
+
+  if (!xstsJson.Token) {
+    return new Response(
+      JSON.stringify({ error: "Failed to get XSTS token", details: xstsJson }),
+      { status: 500 }
+    );
+  }
+
+  const xstsToken = xstsJson.Token;
+  const authHeader = `XBL3.0 x=${uhs};${xstsToken}`;
+
+  //
+  // 4) Fetch achievements
+  //
+  const achRes = await fetch(
+    "https://achievements.xboxlive.com/users/me/achievements?maxItems=200",
+    {
+      headers: {
+        "x-xbl-contract-version": "2",
+        "Authorization": authHeader
+      }
+    }
+  );
+
+  const achJson = await achRes.json();
+
+  //
+  // 5) Return JSON to your frontend
+  //
+  return new Response(JSON.stringify(achJson), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
 }
